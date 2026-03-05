@@ -3,7 +3,6 @@
     import RAPIER from "https://cdn.skypack.dev/@dimforge/rapier3d-compat";
     import {create_mesh,geometry,material,mesh,box} from "./mesh.js"
 
-    create_mesh(scene); 
 
     async function init() {
       await RAPIER.init();
@@ -64,6 +63,8 @@
       return { scene, camera, renderer };
     };
     const { scene, camera, renderer } = core();
+
+    create_mesh(scene); 
 
     //*OBJ読み込み
     const objread=function(){
