@@ -4,9 +4,9 @@ const geometry={};
 const material={};
 const mesh={};
 const box={};
+const body={};
 
-
-export function create_mesh(scene) {
+export function create_mesh(scene,world) {
 {
     geometry.me = new THREE.BoxGeometry(1, 1, 1);
     material.me = new THREE.MeshBasicMaterial({ color: 0x0000ff });
@@ -27,6 +27,10 @@ export function create_mesh(scene) {
     mesh.ball1 = new THREE.Mesh(geometry.cube1, material.cube1);
     scene.add(mesh.ball1);
     box.ball1 = new THREE.Box3();
+    body.ball1 = world.createRigidBody(
+      RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 10, 0)
+    );
+    world.createCollider(RAPIER.ColliderDesc.ball(1), body.ball1);
 }
 {
     geometry.floor1 = new THREE.PlaneGeometry(100, 100);
@@ -36,7 +40,11 @@ export function create_mesh(scene) {
     mesh.floor1.position.y=-10;
     scene.add(mesh.floor1);
     box.floor1 = new THREE.Box3();
+    body.floor1= world.createRigidBody(
+      RAPIER.RigidBodyDesc.fixed().setTranslation(0, -1, 0)
+    );
+    world.createCollider(RAPIER.ColliderDesc.cuboid(50, 1, 50), body.floor1);
 }
 }
 
-export{geometry,material,mesh,box}
+export{geometry,material,mesh,box,body};
