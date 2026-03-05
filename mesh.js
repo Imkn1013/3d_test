@@ -1,8 +1,12 @@
+import * as THREE from 'three';
+
 const geometry={};
 const material={};
 const mesh={};
 const box={};
 
+
+export function create_mesh(scene) {
 {
     geometry.me = new THREE.BoxGeometry(1, 1, 1);
     material.me = new THREE.MeshBasicMaterial({ color: 0x0000ff });
@@ -32,6 +36,7 @@ const box={};
     mesh.floor1.position.y=-10;
     scene.add(mesh.floor1);
     box.floor1 = new THREE.Box3();
+}
 }
 
 export{geometry,material,mesh,box}

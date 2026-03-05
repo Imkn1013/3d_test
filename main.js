@@ -1,7 +1,9 @@
     import * as THREE from 'three';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import RAPIER from "https://cdn.skypack.dev/@dimforge/rapier3d-compat";
-    import {geometry,material,mesh,box} from "./mesh"
+    import {create_mesh,geometry,material,mesh,box} from "./mesh"
+
+    create_mesh(scene); 
 
     async function init() {
       await RAPIER.init();
