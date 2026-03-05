@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import RAPIER from "https://cdn.skypack.dev/@dimforge/rapier3d-compat";
 
 const geometry={};
 const material={};

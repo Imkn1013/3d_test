@@ -1,44 +1,21 @@
+
     import * as THREE from 'three';
     import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
     import RAPIER from "https://cdn.skypack.dev/@dimforge/rapier3d-compat";
     import {create_mesh,geometry,material,mesh,box} from "./mesh.js"
 
-
+    const body={};
+    
     async function init() {
       await RAPIER.init();
       const world = new RAPIER.World({ x: 0, y: -9.81, z: 0 });
-      //地面
-      const groundBody = world.createRigidBody(
-        RAPIER.RigidBodyDesc.fixed().setTranslation(0, -1, 0)
-      );
-      world.createCollider(RAPIER.ColliderDesc.cuboid(50, 1, 50), groundBody);
-
-      //ボール
-      const ballBody = world.createRigidBody(
-        RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 10, 0)
-      );
-      world.createCollider(RAPIER.ColliderDesc.ball(1), ballBody); // 半径1
-
-      // 4. 【ループ】
-      function update() {
-        world.step(); 
-        
-        // ここで ballBody.translation() を取得して Three.js に渡す
-        // ...
-        requestAnimationFrame(update);
-      }
-      update();
+      return{world};
     }
-    init();
 
     //scene,camera,renderer定義,光源追加
     const core=function(){
-    // --- 1. 儀式（シーン、カメラ、レンダラー） ---
-    // ② Scene（儀式・ほぼ固定）
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff);//自由
-
-    // ③ Camera（半固定：値は変更可能）
+    scene.background = new THREE.Color(0xffffff);
     const camera = new THREE.PerspectiveCamera(
       75, // ← 変更可（視野角）
       window.innerWidth / window.innerHeight, // 半固定
@@ -47,9 +24,7 @@
     );
     camera.position.z = 5; // ← 自由
     
-    // ④ Renderer（半固定）
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    //{ antialias: true }は任意？
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
       
@@ -63,9 +38,12 @@
       return { scene, camera, renderer };
     };
     const { scene, camera, renderer } = core();
-
-    create_mesh(scene); 
-
+   
+    // 物理世界の初期化を待ってからメッシュを作成
+    init().then(({world}) => {
+      create_mesh(scene, world);
+    });
+    
     //*OBJ読み込み
     const objread=function(){
     const loader = new OBJLoader();
@@ -170,6 +148,11 @@
       
     };
     
+    //物理計算
+    const physics={
+      world.step();
+    };
+    
     //アニメーションループ
     const animate=function() {
       requestAnimationFrame(animate);
@@ -186,3 +169,4 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
     
+  
